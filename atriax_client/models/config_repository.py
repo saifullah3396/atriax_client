@@ -5,18 +5,17 @@ from uuid import UUID
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-from ..models.task_type import TaskType
 from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
     from ..models.lake_fs_metadata_object import LakeFSMetadataObject
 
 
-T = TypeVar("T", bound="Model")
+T = TypeVar("T", bound="ConfigRepository")
 
 
 @_attrs_define
-class Model:
+class ConfigRepository:
     """
     Attributes:
         id (UUID):
@@ -27,7 +26,6 @@ class Model:
         type_ (str):
         repo_id (str):
         user_id (UUID):
-        task_type (TaskType):
         default_branch (Union[Unset, str]):  Default: 'main'.
         is_public (Union[Unset, bool]):  Default: False.
         storage_metadata (Union['LakeFSMetadataObject', None, Unset]):
@@ -41,7 +39,6 @@ class Model:
     type_: str
     repo_id: str
     user_id: UUID
-    task_type: TaskType
     default_branch: Union[Unset, str] = "main"
     is_public: Union[Unset, bool] = False
     storage_metadata: Union["LakeFSMetadataObject", None, Unset] = UNSET
@@ -65,8 +62,6 @@ class Model:
         repo_id = self.repo_id
 
         user_id = str(self.user_id)
-
-        task_type = self.task_type.value
 
         default_branch = self.default_branch
 
@@ -92,7 +87,6 @@ class Model:
                 "type": type_,
                 "repo_id": repo_id,
                 "user_id": user_id,
-                "task_type": task_type,
             }
         )
         if default_branch is not UNSET:
@@ -125,8 +119,6 @@ class Model:
 
         user_id = UUID(d.pop("user_id"))
 
-        task_type = TaskType(d.pop("task_type"))
-
         default_branch = d.pop("default_branch", UNSET)
 
         is_public = d.pop("is_public", UNSET)
@@ -148,7 +140,7 @@ class Model:
 
         storage_metadata = _parse_storage_metadata(d.pop("storage_metadata", UNSET))
 
-        model = cls(
+        config_repository = cls(
             id=id,
             created_at=created_at,
             updated_at=updated_at,
@@ -157,14 +149,13 @@ class Model:
             type_=type_,
             repo_id=repo_id,
             user_id=user_id,
-            task_type=task_type,
             default_branch=default_branch,
             is_public=is_public,
             storage_metadata=storage_metadata,
         )
 
-        model.additional_properties = d
-        return model
+        config_repository.additional_properties = d
+        return config_repository
 
     @property
     def additional_keys(self) -> list[str]:

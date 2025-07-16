@@ -25,15 +25,16 @@ class Dataset:
         created_at (str):
         updated_at (str):
         name (str):
-        data_instance_type (DataInstanceType):
+        description (str):
+        type_ (str):
+        repo_id (str):
         user_id (UUID):
-        under_processing (Dataset):
-        description (Union[None, Unset, str]):
+        data_instance_type (DataInstanceType):
+        under_processing (bool):
+        default_branch (Union[Unset, str]):  Default: 'main'.
         is_public (Union[Unset, bool]):  Default: False.
-        status (Union[Unset, DatasetStatus]):
         storage_metadata (Union['LakeFSMetadataObject', None, Unset]):
-        card_url (Union[None, Unset, str]):
-        config_url (Union[None, Unset, str]):
+        status (Union[Unset, DatasetStatus]):
         tasks (Union[Unset, list['UserTask']]):
     """
 
@@ -41,15 +42,16 @@ class Dataset:
     created_at: str
     updated_at: str
     name: str
-    data_instance_type: DataInstanceType
+    description: str
+    type_: str
+    repo_id: str
     user_id: UUID
-    under_processing: "Dataset"
-    description: Union[None, Unset, str] = UNSET
+    data_instance_type: DataInstanceType
+    under_processing: bool
+    default_branch: Union[Unset, str] = "main"
     is_public: Union[Unset, bool] = False
-    status: Union[Unset, DatasetStatus] = UNSET
     storage_metadata: Union["LakeFSMetadataObject", None, Unset] = UNSET
-    card_url: Union[None, Unset, str] = UNSET
-    config_url: Union[None, Unset, str] = UNSET
+    status: Union[Unset, DatasetStatus] = UNSET
     tasks: Union[Unset, list["UserTask"]] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -64,23 +66,21 @@ class Dataset:
 
         name = self.name
 
-        data_instance_type = self.data_instance_type.value
+        description = self.description
+
+        type_ = self.type_
+
+        repo_id = self.repo_id
 
         user_id = str(self.user_id)
 
-        under_processing = self.under_processing.to_dict()
+        data_instance_type = self.data_instance_type.value
 
-        description: Union[None, Unset, str]
-        if isinstance(self.description, Unset):
-            description = UNSET
-        else:
-            description = self.description
+        under_processing = self.under_processing
+
+        default_branch = self.default_branch
 
         is_public = self.is_public
-
-        status: Union[Unset, str] = UNSET
-        if not isinstance(self.status, Unset):
-            status = self.status.value
 
         storage_metadata: Union[None, Unset, dict[str, Any]]
         if isinstance(self.storage_metadata, Unset):
@@ -90,17 +90,9 @@ class Dataset:
         else:
             storage_metadata = self.storage_metadata
 
-        card_url: Union[None, Unset, str]
-        if isinstance(self.card_url, Unset):
-            card_url = UNSET
-        else:
-            card_url = self.card_url
-
-        config_url: Union[None, Unset, str]
-        if isinstance(self.config_url, Unset):
-            config_url = UNSET
-        else:
-            config_url = self.config_url
+        status: Union[Unset, str] = UNSET
+        if not isinstance(self.status, Unset):
+            status = self.status.value
 
         tasks: Union[Unset, list[dict[str, Any]]] = UNSET
         if not isinstance(self.tasks, Unset):
@@ -117,23 +109,22 @@ class Dataset:
                 "created_at": created_at,
                 "updated_at": updated_at,
                 "name": name,
-                "data_instance_type": data_instance_type,
+                "description": description,
+                "type": type_,
+                "repo_id": repo_id,
                 "user_id": user_id,
+                "data_instance_type": data_instance_type,
                 "under_processing": under_processing,
             }
         )
-        if description is not UNSET:
-            field_dict["description"] = description
+        if default_branch is not UNSET:
+            field_dict["default_branch"] = default_branch
         if is_public is not UNSET:
             field_dict["is_public"] = is_public
-        if status is not UNSET:
-            field_dict["status"] = status
         if storage_metadata is not UNSET:
             field_dict["storage_metadata"] = storage_metadata
-        if card_url is not UNSET:
-            field_dict["card_url"] = card_url
-        if config_url is not UNSET:
-            field_dict["config_url"] = config_url
+        if status is not UNSET:
+            field_dict["status"] = status
         if tasks is not UNSET:
             field_dict["tasks"] = tasks
 
@@ -153,29 +144,21 @@ class Dataset:
 
         name = d.pop("name")
 
-        data_instance_type = DataInstanceType(d.pop("data_instance_type"))
+        description = d.pop("description")
+
+        type_ = d.pop("type")
+
+        repo_id = d.pop("repo_id")
 
         user_id = UUID(d.pop("user_id"))
 
-        under_processing = Dataset.from_dict(d.pop("under_processing"))
+        data_instance_type = DataInstanceType(d.pop("data_instance_type"))
 
-        def _parse_description(data: object) -> Union[None, Unset, str]:
-            if data is None:
-                return data
-            if isinstance(data, Unset):
-                return data
-            return cast(Union[None, Unset, str], data)
+        under_processing = d.pop("under_processing")
 
-        description = _parse_description(d.pop("description", UNSET))
+        default_branch = d.pop("default_branch", UNSET)
 
         is_public = d.pop("is_public", UNSET)
-
-        _status = d.pop("status", UNSET)
-        status: Union[Unset, DatasetStatus]
-        if isinstance(_status, Unset):
-            status = UNSET
-        else:
-            status = DatasetStatus(_status)
 
         def _parse_storage_metadata(data: object) -> Union["LakeFSMetadataObject", None, Unset]:
             if data is None:
@@ -194,23 +177,12 @@ class Dataset:
 
         storage_metadata = _parse_storage_metadata(d.pop("storage_metadata", UNSET))
 
-        def _parse_card_url(data: object) -> Union[None, Unset, str]:
-            if data is None:
-                return data
-            if isinstance(data, Unset):
-                return data
-            return cast(Union[None, Unset, str], data)
-
-        card_url = _parse_card_url(d.pop("card_url", UNSET))
-
-        def _parse_config_url(data: object) -> Union[None, Unset, str]:
-            if data is None:
-                return data
-            if isinstance(data, Unset):
-                return data
-            return cast(Union[None, Unset, str], data)
-
-        config_url = _parse_config_url(d.pop("config_url", UNSET))
+        _status = d.pop("status", UNSET)
+        status: Union[Unset, DatasetStatus]
+        if isinstance(_status, Unset):
+            status = UNSET
+        else:
+            status = DatasetStatus(_status)
 
         tasks = []
         _tasks = d.pop("tasks", UNSET)
@@ -224,15 +196,16 @@ class Dataset:
             created_at=created_at,
             updated_at=updated_at,
             name=name,
-            data_instance_type=data_instance_type,
-            user_id=user_id,
-            under_processing=under_processing,
             description=description,
+            type_=type_,
+            repo_id=repo_id,
+            user_id=user_id,
+            data_instance_type=data_instance_type,
+            under_processing=under_processing,
+            default_branch=default_branch,
             is_public=is_public,
-            status=status,
             storage_metadata=storage_metadata,
-            card_url=card_url,
-            config_url=config_url,
+            status=status,
             tasks=tasks,
         )
 

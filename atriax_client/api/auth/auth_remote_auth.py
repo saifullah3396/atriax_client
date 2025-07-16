@@ -5,18 +5,27 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
+from ...models.auth_remote_auth_data import AuthRemoteAuthData
 from ...models.http_validation_error import HTTPValidationError
 from ...types import Response
 
 
 def _get_kwargs(
-    full_path: str,
+    *,
+    body: AuthRemoteAuthData,
 ) -> dict[str, Any]:
+    headers: dict[str, Any] = {}
+
     _kwargs: dict[str, Any] = {
-        "method": "patch",
-        "url": f"/auth/v1/{full_path}",
+        "method": "post",
+        "url": "/auth/v1/remote",
     }
 
+    _kwargs["json"] = body.to_dict()
+
+    headers["Content-Type"] = "application/json"
+
+    _kwargs["headers"] = headers
     return _kwargs
 
 
@@ -48,14 +57,14 @@ def _build_response(
 
 
 def sync_detailed(
-    full_path: str,
     *,
     client: AuthenticatedClient,
+    body: AuthRemoteAuthData,
 ) -> Response[Union[Any, HTTPValidationError]]:
-    """Proxy All Auth Requests Patch
+    """Remote Auth
 
     Args:
-        full_path (str):
+        body (AuthRemoteAuthData):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -66,7 +75,7 @@ def sync_detailed(
     """
 
     kwargs = _get_kwargs(
-        full_path=full_path,
+        body=body,
     )
 
     response = client.get_httpx_client().request(
@@ -77,14 +86,14 @@ def sync_detailed(
 
 
 def sync(
-    full_path: str,
     *,
     client: AuthenticatedClient,
+    body: AuthRemoteAuthData,
 ) -> Optional[Union[Any, HTTPValidationError]]:
-    """Proxy All Auth Requests Patch
+    """Remote Auth
 
     Args:
-        full_path (str):
+        body (AuthRemoteAuthData):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -95,20 +104,20 @@ def sync(
     """
 
     return sync_detailed(
-        full_path=full_path,
         client=client,
+        body=body,
     ).parsed
 
 
 async def asyncio_detailed(
-    full_path: str,
     *,
     client: AuthenticatedClient,
+    body: AuthRemoteAuthData,
 ) -> Response[Union[Any, HTTPValidationError]]:
-    """Proxy All Auth Requests Patch
+    """Remote Auth
 
     Args:
-        full_path (str):
+        body (AuthRemoteAuthData):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -119,7 +128,7 @@ async def asyncio_detailed(
     """
 
     kwargs = _get_kwargs(
-        full_path=full_path,
+        body=body,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -128,14 +137,14 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    full_path: str,
     *,
     client: AuthenticatedClient,
+    body: AuthRemoteAuthData,
 ) -> Optional[Union[Any, HTTPValidationError]]:
-    """Proxy All Auth Requests Patch
+    """Remote Auth
 
     Args:
-        full_path (str):
+        body (AuthRemoteAuthData):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -147,7 +156,7 @@ async def asyncio(
 
     return (
         await asyncio_detailed(
-            full_path=full_path,
             client=client,
+            body=body,
         )
     ).parsed

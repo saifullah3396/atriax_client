@@ -11,7 +11,7 @@ from ...types import Response
 def _get_kwargs() -> dict[str, Any]:
     _kwargs: dict[str, Any] = {
         "method": "delete",
-        "url": "/api/v1/auth/delete",
+        "url": "/auth/v1/delete",
     }
 
     return _kwargs

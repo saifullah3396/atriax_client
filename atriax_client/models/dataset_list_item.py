@@ -1,5 +1,5 @@
 from collections.abc import Mapping
-from typing import TYPE_CHECKING, Any, TypeVar, Union, cast
+from typing import TYPE_CHECKING, Any, TypeVar, Union
 from uuid import UUID
 
 from attrs import define as _attrs_define
@@ -24,10 +24,12 @@ class DatasetListItem:
         created_at (str):
         updated_at (str):
         name (str):
-        data_instance_type (DataInstanceType):
+        description (str):
+        type_ (str):
         user_id (UUID):
         storage_metadata (LakeFSMetadataObject):
-        description (Union[None, Unset, str]):
+        data_instance_type (DataInstanceType):
+        default_branch (Union[Unset, str]):  Default: 'main'.
         is_public (Union[Unset, bool]):  Default: False.
         status (Union[Unset, DatasetStatus]):
     """
@@ -36,10 +38,12 @@ class DatasetListItem:
     created_at: str
     updated_at: str
     name: str
-    data_instance_type: DataInstanceType
+    description: str
+    type_: str
     user_id: UUID
     storage_metadata: "LakeFSMetadataObject"
-    description: Union[None, Unset, str] = UNSET
+    data_instance_type: DataInstanceType
+    default_branch: Union[Unset, str] = "main"
     is_public: Union[Unset, bool] = False
     status: Union[Unset, DatasetStatus] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
@@ -53,17 +57,17 @@ class DatasetListItem:
 
         name = self.name
 
-        data_instance_type = self.data_instance_type.value
+        description = self.description
+
+        type_ = self.type_
 
         user_id = str(self.user_id)
 
         storage_metadata = self.storage_metadata.to_dict()
 
-        description: Union[None, Unset, str]
-        if isinstance(self.description, Unset):
-            description = UNSET
-        else:
-            description = self.description
+        data_instance_type = self.data_instance_type.value
+
+        default_branch = self.default_branch
 
         is_public = self.is_public
 
@@ -79,13 +83,15 @@ class DatasetListItem:
                 "created_at": created_at,
                 "updated_at": updated_at,
                 "name": name,
-                "data_instance_type": data_instance_type,
+                "description": description,
+                "type": type_,
                 "user_id": user_id,
                 "storage_metadata": storage_metadata,
+                "data_instance_type": data_instance_type,
             }
         )
-        if description is not UNSET:
-            field_dict["description"] = description
+        if default_branch is not UNSET:
+            field_dict["default_branch"] = default_branch
         if is_public is not UNSET:
             field_dict["is_public"] = is_public
         if status is not UNSET:
@@ -106,20 +112,17 @@ class DatasetListItem:
 
         name = d.pop("name")
 
-        data_instance_type = DataInstanceType(d.pop("data_instance_type"))
+        description = d.pop("description")
+
+        type_ = d.pop("type")
 
         user_id = UUID(d.pop("user_id"))
 
         storage_metadata = LakeFSMetadataObject.from_dict(d.pop("storage_metadata"))
 
-        def _parse_description(data: object) -> Union[None, Unset, str]:
-            if data is None:
-                return data
-            if isinstance(data, Unset):
-                return data
-            return cast(Union[None, Unset, str], data)
+        data_instance_type = DataInstanceType(d.pop("data_instance_type"))
 
-        description = _parse_description(d.pop("description", UNSET))
+        default_branch = d.pop("default_branch", UNSET)
 
         is_public = d.pop("is_public", UNSET)
 
@@ -135,10 +138,12 @@ class DatasetListItem:
             created_at=created_at,
             updated_at=updated_at,
             name=name,
-            data_instance_type=data_instance_type,
+            description=description,
+            type_=type_,
             user_id=user_id,
             storage_metadata=storage_metadata,
-            description=description,
+            data_instance_type=data_instance_type,
+            default_branch=default_branch,
             is_public=is_public,
             status=status,
         )

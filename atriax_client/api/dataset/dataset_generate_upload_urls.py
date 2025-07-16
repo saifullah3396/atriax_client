@@ -1,30 +1,44 @@
 from http import HTTPStatus
 from typing import Any, Optional, Union
+from uuid import UUID
 
 import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
+from ...models.body_dataset_generate_upload_urls import BodyDatasetGenerateUploadUrls
 from ...models.http_validation_error import HTTPValidationError
+from ...models.pre_signed_url_response import PreSignedUrlResponse
 from ...types import Response
 
 
 def _get_kwargs(
-    full_path: str,
+    id: UUID,
+    branch: str,
+    *,
+    body: BodyDatasetGenerateUploadUrls,
 ) -> dict[str, Any]:
+    headers: dict[str, Any] = {}
+
     _kwargs: dict[str, Any] = {
-        "method": "patch",
-        "url": f"/auth/v1/{full_path}",
+        "method": "post",
+        "url": f"/api/v1/dataset/{id}/generate_upload_urls/{branch}/",
     }
 
+    _kwargs["data"] = body.to_dict()
+
+    headers["Content-Type"] = "application/x-www-form-urlencoded"
+
+    _kwargs["headers"] = headers
     return _kwargs
 
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[Union[Any, HTTPValidationError]]:
+) -> Optional[Union[HTTPValidationError, PreSignedUrlResponse]]:
     if response.status_code == 200:
-        response_200 = response.json()
+        response_200 = PreSignedUrlResponse.from_dict(response.json())
+
         return response_200
     if response.status_code == 422:
         response_422 = HTTPValidationError.from_dict(response.json())
@@ -38,7 +52,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[Union[Any, HTTPValidationError]]:
+) -> Response[Union[HTTPValidationError, PreSignedUrlResponse]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -48,25 +62,31 @@ def _build_response(
 
 
 def sync_detailed(
-    full_path: str,
+    id: UUID,
+    branch: str,
     *,
     client: AuthenticatedClient,
-) -> Response[Union[Any, HTTPValidationError]]:
-    """Proxy All Auth Requests Patch
+    body: BodyDatasetGenerateUploadUrls,
+) -> Response[Union[HTTPValidationError, PreSignedUrlResponse]]:
+    """Generate Upload Urls
 
     Args:
-        full_path (str):
+        id (UUID):
+        branch (str):
+        body (BodyDatasetGenerateUploadUrls):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, HTTPValidationError]]
+        Response[Union[HTTPValidationError, PreSignedUrlResponse]]
     """
 
     kwargs = _get_kwargs(
-        full_path=full_path,
+        id=id,
+        branch=branch,
+        body=body,
     )
 
     response = client.get_httpx_client().request(
@@ -77,49 +97,61 @@ def sync_detailed(
 
 
 def sync(
-    full_path: str,
+    id: UUID,
+    branch: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[Union[Any, HTTPValidationError]]:
-    """Proxy All Auth Requests Patch
+    body: BodyDatasetGenerateUploadUrls,
+) -> Optional[Union[HTTPValidationError, PreSignedUrlResponse]]:
+    """Generate Upload Urls
 
     Args:
-        full_path (str):
+        id (UUID):
+        branch (str):
+        body (BodyDatasetGenerateUploadUrls):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Any, HTTPValidationError]
+        Union[HTTPValidationError, PreSignedUrlResponse]
     """
 
     return sync_detailed(
-        full_path=full_path,
+        id=id,
+        branch=branch,
         client=client,
+        body=body,
     ).parsed
 
 
 async def asyncio_detailed(
-    full_path: str,
+    id: UUID,
+    branch: str,
     *,
     client: AuthenticatedClient,
-) -> Response[Union[Any, HTTPValidationError]]:
-    """Proxy All Auth Requests Patch
+    body: BodyDatasetGenerateUploadUrls,
+) -> Response[Union[HTTPValidationError, PreSignedUrlResponse]]:
+    """Generate Upload Urls
 
     Args:
-        full_path (str):
+        id (UUID):
+        branch (str):
+        body (BodyDatasetGenerateUploadUrls):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, HTTPValidationError]]
+        Response[Union[HTTPValidationError, PreSignedUrlResponse]]
     """
 
     kwargs = _get_kwargs(
-        full_path=full_path,
+        id=id,
+        branch=branch,
+        body=body,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -128,26 +160,32 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    full_path: str,
+    id: UUID,
+    branch: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[Union[Any, HTTPValidationError]]:
-    """Proxy All Auth Requests Patch
+    body: BodyDatasetGenerateUploadUrls,
+) -> Optional[Union[HTTPValidationError, PreSignedUrlResponse]]:
+    """Generate Upload Urls
 
     Args:
-        full_path (str):
+        id (UUID):
+        branch (str):
+        body (BodyDatasetGenerateUploadUrls):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Any, HTTPValidationError]
+        Union[HTTPValidationError, PreSignedUrlResponse]
     """
 
     return (
         await asyncio_detailed(
-            full_path=full_path,
+            id=id,
+            branch=branch,
             client=client,
+            body=body,
         )
     ).parsed

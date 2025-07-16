@@ -5,16 +5,38 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
+from ...models.config_repository import ConfigRepository
 from ...models.http_validation_error import HTTPValidationError
-from ...types import Response
+from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
-    full_path: str,
+    *,
+    username: Union[None, Unset, str] = UNSET,
+    name: Union[None, Unset, str] = UNSET,
 ) -> dict[str, Any]:
+    params: dict[str, Any] = {}
+
+    json_username: Union[None, Unset, str]
+    if isinstance(username, Unset):
+        json_username = UNSET
+    else:
+        json_username = username
+    params["username"] = json_username
+
+    json_name: Union[None, Unset, str]
+    if isinstance(name, Unset):
+        json_name = UNSET
+    else:
+        json_name = name
+    params["name"] = json_name
+
+    params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
+
     _kwargs: dict[str, Any] = {
-        "method": "patch",
-        "url": f"/auth/v1/{full_path}",
+        "method": "get",
+        "url": "/api/v1/config_repository/find_one/",
+        "params": params,
     }
 
     return _kwargs
@@ -22,9 +44,10 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[Union[Any, HTTPValidationError]]:
+) -> Optional[Union[ConfigRepository, HTTPValidationError]]:
     if response.status_code == 200:
-        response_200 = response.json()
+        response_200 = ConfigRepository.from_dict(response.json())
+
         return response_200
     if response.status_code == 422:
         response_422 = HTTPValidationError.from_dict(response.json())
@@ -38,7 +61,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[Union[Any, HTTPValidationError]]:
+) -> Response[Union[ConfigRepository, HTTPValidationError]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -48,25 +71,28 @@ def _build_response(
 
 
 def sync_detailed(
-    full_path: str,
     *,
     client: AuthenticatedClient,
-) -> Response[Union[Any, HTTPValidationError]]:
-    """Proxy All Auth Requests Patch
+    username: Union[None, Unset, str] = UNSET,
+    name: Union[None, Unset, str] = UNSET,
+) -> Response[Union[ConfigRepository, HTTPValidationError]]:
+    """Find One
 
     Args:
-        full_path (str):
+        username (Union[None, Unset, str]):
+        name (Union[None, Unset, str]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, HTTPValidationError]]
+        Response[Union[ConfigRepository, HTTPValidationError]]
     """
 
     kwargs = _get_kwargs(
-        full_path=full_path,
+        username=username,
+        name=name,
     )
 
     response = client.get_httpx_client().request(
@@ -77,49 +103,55 @@ def sync_detailed(
 
 
 def sync(
-    full_path: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[Union[Any, HTTPValidationError]]:
-    """Proxy All Auth Requests Patch
+    username: Union[None, Unset, str] = UNSET,
+    name: Union[None, Unset, str] = UNSET,
+) -> Optional[Union[ConfigRepository, HTTPValidationError]]:
+    """Find One
 
     Args:
-        full_path (str):
+        username (Union[None, Unset, str]):
+        name (Union[None, Unset, str]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Any, HTTPValidationError]
+        Union[ConfigRepository, HTTPValidationError]
     """
 
     return sync_detailed(
-        full_path=full_path,
         client=client,
+        username=username,
+        name=name,
     ).parsed
 
 
 async def asyncio_detailed(
-    full_path: str,
     *,
     client: AuthenticatedClient,
-) -> Response[Union[Any, HTTPValidationError]]:
-    """Proxy All Auth Requests Patch
+    username: Union[None, Unset, str] = UNSET,
+    name: Union[None, Unset, str] = UNSET,
+) -> Response[Union[ConfigRepository, HTTPValidationError]]:
+    """Find One
 
     Args:
-        full_path (str):
+        username (Union[None, Unset, str]):
+        name (Union[None, Unset, str]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, HTTPValidationError]]
+        Response[Union[ConfigRepository, HTTPValidationError]]
     """
 
     kwargs = _get_kwargs(
-        full_path=full_path,
+        username=username,
+        name=name,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -128,26 +160,29 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    full_path: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[Union[Any, HTTPValidationError]]:
-    """Proxy All Auth Requests Patch
+    username: Union[None, Unset, str] = UNSET,
+    name: Union[None, Unset, str] = UNSET,
+) -> Optional[Union[ConfigRepository, HTTPValidationError]]:
+    """Find One
 
     Args:
-        full_path (str):
+        username (Union[None, Unset, str]):
+        name (Union[None, Unset, str]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Any, HTTPValidationError]
+        Union[ConfigRepository, HTTPValidationError]
     """
 
     return (
         await asyncio_detailed(
-            full_path=full_path,
             client=client,
+            username=username,
+            name=name,
         )
     ).parsed

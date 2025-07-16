@@ -13,6 +13,7 @@ from ...types import UNSET, Response, Unset
 def _get_kwargs(
     *,
     username: Union[None, Unset, str] = UNSET,
+    name: Union[None, Unset, str] = UNSET,
 ) -> dict[str, Any]:
     params: dict[str, Any] = {}
 
@@ -23,11 +24,18 @@ def _get_kwargs(
         json_username = username
     params["username"] = json_username
 
+    json_name: Union[None, Unset, str]
+    if isinstance(name, Unset):
+        json_name = UNSET
+    else:
+        json_name = name
+    params["name"] = json_name
+
     params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
 
     _kwargs: dict[str, Any] = {
         "method": "get",
-        "url": "/api/v1/dataset/find_one",
+        "url": "/api/v1/dataset/find_one/",
         "params": params,
     }
 
@@ -66,11 +74,13 @@ def sync_detailed(
     *,
     client: AuthenticatedClient,
     username: Union[None, Unset, str] = UNSET,
+    name: Union[None, Unset, str] = UNSET,
 ) -> Response[Union[Dataset, HTTPValidationError]]:
     """Find One
 
     Args:
         username (Union[None, Unset, str]):
+        name (Union[None, Unset, str]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -82,6 +92,7 @@ def sync_detailed(
 
     kwargs = _get_kwargs(
         username=username,
+        name=name,
     )
 
     response = client.get_httpx_client().request(
@@ -95,11 +106,13 @@ def sync(
     *,
     client: AuthenticatedClient,
     username: Union[None, Unset, str] = UNSET,
+    name: Union[None, Unset, str] = UNSET,
 ) -> Optional[Union[Dataset, HTTPValidationError]]:
     """Find One
 
     Args:
         username (Union[None, Unset, str]):
+        name (Union[None, Unset, str]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -112,6 +125,7 @@ def sync(
     return sync_detailed(
         client=client,
         username=username,
+        name=name,
     ).parsed
 
 
@@ -119,11 +133,13 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient,
     username: Union[None, Unset, str] = UNSET,
+    name: Union[None, Unset, str] = UNSET,
 ) -> Response[Union[Dataset, HTTPValidationError]]:
     """Find One
 
     Args:
         username (Union[None, Unset, str]):
+        name (Union[None, Unset, str]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -135,6 +151,7 @@ async def asyncio_detailed(
 
     kwargs = _get_kwargs(
         username=username,
+        name=name,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -146,11 +163,13 @@ async def asyncio(
     *,
     client: AuthenticatedClient,
     username: Union[None, Unset, str] = UNSET,
+    name: Union[None, Unset, str] = UNSET,
 ) -> Optional[Union[Dataset, HTTPValidationError]]:
     """Find One
 
     Args:
         username (Union[None, Unset, str]):
+        name (Union[None, Unset, str]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -164,5 +183,6 @@ async def asyncio(
         await asyncio_detailed(
             client=client,
             username=username,
+            name=name,
         )
     ).parsed

@@ -6,6 +6,7 @@ from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
 from .. import types
+from ..models.task_type import TaskType
 from ..types import UNSET, File, Unset
 
 T = TypeVar("T", bound="BodyModelCreate")
@@ -16,13 +17,15 @@ class BodyModelCreate:
     """
     Attributes:
         name (str):
-        model_file (File):
+        task_type (TaskType):
+        model_file (Union[Unset, File]):
         description (Union[Unset, str]):
         is_public (Union[Unset, bool]):  Default: False.
     """
 
     name: str
-    model_file: File
+    task_type: TaskType
+    model_file: Union[Unset, File] = UNSET
     description: Union[Unset, str] = UNSET
     is_public: Union[Unset, bool] = False
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
@@ -30,7 +33,11 @@ class BodyModelCreate:
     def to_dict(self) -> dict[str, Any]:
         name = self.name
 
-        model_file = self.model_file.to_tuple()
+        task_type = self.task_type.value
+
+        model_file: Union[Unset, types.FileTypes] = UNSET
+        if not isinstance(self.model_file, Unset):
+            model_file = self.model_file.to_tuple()
 
         description = self.description
 
@@ -41,9 +48,11 @@ class BodyModelCreate:
         field_dict.update(
             {
                 "name": name,
-                "model_file": model_file,
+                "task_type": task_type,
             }
         )
+        if model_file is not UNSET:
+            field_dict["model_file"] = model_file
         if description is not UNSET:
             field_dict["description"] = description
         if is_public is not UNSET:
@@ -56,7 +65,10 @@ class BodyModelCreate:
 
         files.append(("name", (None, str(self.name).encode(), "text/plain")))
 
-        files.append(("model_file", self.model_file.to_tuple()))
+        files.append(("task_type", (None, str(self.task_type.value).encode(), "text/plain")))
+
+        if not isinstance(self.model_file, Unset):
+            files.append(("model_file", self.model_file.to_tuple()))
 
         if not isinstance(self.description, Unset):
             files.append(("description", (None, str(self.description).encode(), "text/plain")))
@@ -74,7 +86,14 @@ class BodyModelCreate:
         d = dict(src_dict)
         name = d.pop("name")
 
-        model_file = File(payload=BytesIO(d.pop("model_file")))
+        task_type = TaskType(d.pop("task_type"))
+
+        _model_file = d.pop("model_file", UNSET)
+        model_file: Union[Unset, File]
+        if isinstance(_model_file, Unset):
+            model_file = UNSET
+        else:
+            model_file = File(payload=BytesIO(_model_file))
 
         description = d.pop("description", UNSET)
 
@@ -82,6 +101,7 @@ class BodyModelCreate:
 
         body_model_create = cls(
             name=name,
+            task_type=task_type,
             model_file=model_file,
             description=description,
             is_public=is_public,
