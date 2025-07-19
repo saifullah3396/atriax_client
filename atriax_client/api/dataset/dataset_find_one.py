@@ -7,29 +7,19 @@ from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.dataset import Dataset
 from ...models.http_validation_error import HTTPValidationError
-from ...types import UNSET, Response, Unset
+from ...types import UNSET, Response
 
 
 def _get_kwargs(
     *,
-    username: Union[None, Unset, str] = UNSET,
-    name: Union[None, Unset, str] = UNSET,
+    username: str,
+    name: str,
 ) -> dict[str, Any]:
     params: dict[str, Any] = {}
 
-    json_username: Union[None, Unset, str]
-    if isinstance(username, Unset):
-        json_username = UNSET
-    else:
-        json_username = username
-    params["username"] = json_username
+    params["username"] = username
 
-    json_name: Union[None, Unset, str]
-    if isinstance(name, Unset):
-        json_name = UNSET
-    else:
-        json_name = name
-    params["name"] = json_name
+    params["name"] = name
 
     params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
 
@@ -73,14 +63,14 @@ def _build_response(
 def sync_detailed(
     *,
     client: AuthenticatedClient,
-    username: Union[None, Unset, str] = UNSET,
-    name: Union[None, Unset, str] = UNSET,
+    username: str,
+    name: str,
 ) -> Response[Union[Dataset, HTTPValidationError]]:
     """Find One
 
     Args:
-        username (Union[None, Unset, str]):
-        name (Union[None, Unset, str]):
+        username (str):
+        name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -105,14 +95,14 @@ def sync_detailed(
 def sync(
     *,
     client: AuthenticatedClient,
-    username: Union[None, Unset, str] = UNSET,
-    name: Union[None, Unset, str] = UNSET,
+    username: str,
+    name: str,
 ) -> Optional[Union[Dataset, HTTPValidationError]]:
     """Find One
 
     Args:
-        username (Union[None, Unset, str]):
-        name (Union[None, Unset, str]):
+        username (str):
+        name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -132,14 +122,14 @@ def sync(
 async def asyncio_detailed(
     *,
     client: AuthenticatedClient,
-    username: Union[None, Unset, str] = UNSET,
-    name: Union[None, Unset, str] = UNSET,
+    username: str,
+    name: str,
 ) -> Response[Union[Dataset, HTTPValidationError]]:
     """Find One
 
     Args:
-        username (Union[None, Unset, str]):
-        name (Union[None, Unset, str]):
+        username (str):
+        name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -162,14 +152,14 @@ async def asyncio_detailed(
 async def asyncio(
     *,
     client: AuthenticatedClient,
-    username: Union[None, Unset, str] = UNSET,
-    name: Union[None, Unset, str] = UNSET,
+    username: str,
+    name: str,
 ) -> Optional[Union[Dataset, HTTPValidationError]]:
     """Find One
 
     Args:
-        username (Union[None, Unset, str]):
-        name (Union[None, Unset, str]):
+        username (str):
+        name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

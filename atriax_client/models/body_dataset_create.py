@@ -17,12 +17,14 @@ class BodyDatasetCreate:
         name (str):
         description (str):
         data_instance_type (DataInstanceType):
+        default_branch (Union[Unset, str]):  Default: 'main'.
         is_public (Union[Unset, bool]):  Default: False.
     """
 
     name: str
     description: str
     data_instance_type: DataInstanceType
+    default_branch: Union[Unset, str] = "main"
     is_public: Union[Unset, bool] = False
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -32,6 +34,8 @@ class BodyDatasetCreate:
         description = self.description
 
         data_instance_type = self.data_instance_type.value
+
+        default_branch = self.default_branch
 
         is_public = self.is_public
 
@@ -44,6 +48,8 @@ class BodyDatasetCreate:
                 "data_instance_type": data_instance_type,
             }
         )
+        if default_branch is not UNSET:
+            field_dict["default_branch"] = default_branch
         if is_public is not UNSET:
             field_dict["is_public"] = is_public
 
@@ -58,12 +64,15 @@ class BodyDatasetCreate:
 
         data_instance_type = DataInstanceType(d.pop("data_instance_type"))
 
+        default_branch = d.pop("default_branch", UNSET)
+
         is_public = d.pop("is_public", UNSET)
 
         body_dataset_create = cls(
             name=name,
             description=description,
             data_instance_type=data_instance_type,
+            default_branch=default_branch,
             is_public=is_public,
         )
 

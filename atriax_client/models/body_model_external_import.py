@@ -8,7 +8,7 @@ from attrs import field as _attrs_field
 from .. import types
 from ..models.model_type import ModelType
 from ..models.task_type import TaskType
-from ..types import UNSET, File, Unset
+from ..types import UNSET, File, FileTypes, Unset
 
 T = TypeVar("T", bound="BodyModelExternalImport")
 
@@ -74,11 +74,11 @@ class BodyModelExternalImport:
 
         is_public = self.is_public
 
-        card_file: Union[Unset, types.FileTypes] = UNSET
+        card_file: Union[Unset, FileTypes] = UNSET
         if not isinstance(self.card_file, Unset):
             card_file = self.card_file.to_tuple()
 
-        model_file: Union[Unset, types.FileTypes] = UNSET
+        model_file: Union[Unset, FileTypes] = UNSET
         if not isinstance(self.model_file, Unset):
             model_file = self.model_file.to_tuple()
 

@@ -6,7 +6,7 @@ from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
 from .. import types
-from ..types import UNSET, File, Unset
+from ..types import UNSET, File, FileTypes, Unset
 
 T = TypeVar("T", bound="BodyUserProfileUpdate")
 
@@ -54,7 +54,7 @@ class BodyUserProfileUpdate:
         else:
             website = self.website
 
-        avatar_file: Union[None, Unset, types.FileTypes]
+        avatar_file: Union[FileTypes, None, Unset]
         if isinstance(self.avatar_file, Unset):
             avatar_file = UNSET
         elif isinstance(self.avatar_file, File):
