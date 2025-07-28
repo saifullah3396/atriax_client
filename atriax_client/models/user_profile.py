@@ -18,9 +18,9 @@ class UserProfile:
         created_at (str):
         updated_at (str):
         username (str):
-        full_name (str): Full name of the user
         email (str): Email address of the user
         user_id (UUID):
+        full_name (Union[None, Unset, str]): Full name of the user
         bio (Union[None, Unset, str]): Short biography of the user
         location (Union[None, Unset, str]): Location of the user
         website (Union[None, Unset, str]): URL of the user's personal or professional website
@@ -31,9 +31,9 @@ class UserProfile:
     created_at: str
     updated_at: str
     username: str
-    full_name: str
     email: str
     user_id: UUID
+    full_name: Union[None, Unset, str] = UNSET
     bio: Union[None, Unset, str] = UNSET
     location: Union[None, Unset, str] = UNSET
     website: Union[None, Unset, str] = UNSET
@@ -49,11 +49,15 @@ class UserProfile:
 
         username = self.username
 
-        full_name = self.full_name
-
         email = self.email
 
         user_id = str(self.user_id)
+
+        full_name: Union[None, Unset, str]
+        if isinstance(self.full_name, Unset):
+            full_name = UNSET
+        else:
+            full_name = self.full_name
 
         bio: Union[None, Unset, str]
         if isinstance(self.bio, Unset):
@@ -87,11 +91,12 @@ class UserProfile:
                 "created_at": created_at,
                 "updated_at": updated_at,
                 "username": username,
-                "full_name": full_name,
                 "email": email,
                 "user_id": user_id,
             }
         )
+        if full_name is not UNSET:
+            field_dict["full_name"] = full_name
         if bio is not UNSET:
             field_dict["bio"] = bio
         if location is not UNSET:
@@ -114,11 +119,18 @@ class UserProfile:
 
         username = d.pop("username")
 
-        full_name = d.pop("full_name")
-
         email = d.pop("email")
 
         user_id = UUID(d.pop("user_id"))
+
+        def _parse_full_name(data: object) -> Union[None, Unset, str]:
+            if data is None:
+                return data
+            if isinstance(data, Unset):
+                return data
+            return cast(Union[None, Unset, str], data)
+
+        full_name = _parse_full_name(d.pop("full_name", UNSET))
 
         def _parse_bio(data: object) -> Union[None, Unset, str]:
             if data is None:
@@ -161,9 +173,9 @@ class UserProfile:
             created_at=created_at,
             updated_at=updated_at,
             username=username,
-            full_name=full_name,
             email=email,
             user_id=user_id,
+            full_name=full_name,
             bio=bio,
             location=location,
             website=website,

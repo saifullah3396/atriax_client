@@ -19,6 +19,7 @@ class BodyModelCreate:
         name (str):
         task_type (TaskType):
         model_file (Union[Unset, File]):
+        default_branch (Union[Unset, str]):  Default: 'main'.
         description (Union[Unset, str]):
         is_public (Union[Unset, bool]):  Default: False.
     """
@@ -26,6 +27,7 @@ class BodyModelCreate:
     name: str
     task_type: TaskType
     model_file: Union[Unset, File] = UNSET
+    default_branch: Union[Unset, str] = "main"
     description: Union[Unset, str] = UNSET
     is_public: Union[Unset, bool] = False
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
@@ -38,6 +40,8 @@ class BodyModelCreate:
         model_file: Union[Unset, FileTypes] = UNSET
         if not isinstance(self.model_file, Unset):
             model_file = self.model_file.to_tuple()
+
+        default_branch = self.default_branch
 
         description = self.description
 
@@ -53,6 +57,8 @@ class BodyModelCreate:
         )
         if model_file is not UNSET:
             field_dict["model_file"] = model_file
+        if default_branch is not UNSET:
+            field_dict["default_branch"] = default_branch
         if description is not UNSET:
             field_dict["description"] = description
         if is_public is not UNSET:
@@ -69,6 +75,9 @@ class BodyModelCreate:
 
         if not isinstance(self.model_file, Unset):
             files.append(("model_file", self.model_file.to_tuple()))
+
+        if not isinstance(self.default_branch, Unset):
+            files.append(("default_branch", (None, str(self.default_branch).encode(), "text/plain")))
 
         if not isinstance(self.description, Unset):
             files.append(("description", (None, str(self.description).encode(), "text/plain")))
@@ -95,6 +104,8 @@ class BodyModelCreate:
         else:
             model_file = File(payload=BytesIO(_model_file))
 
+        default_branch = d.pop("default_branch", UNSET)
+
         description = d.pop("description", UNSET)
 
         is_public = d.pop("is_public", UNSET)
@@ -103,6 +114,7 @@ class BodyModelCreate:
             name=name,
             task_type=task_type,
             model_file=model_file,
+            default_branch=default_branch,
             description=description,
             is_public=is_public,
         )
