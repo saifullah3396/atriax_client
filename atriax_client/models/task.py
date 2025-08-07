@@ -1,5 +1,5 @@
 from collections.abc import Mapping
-from typing import Any, TypeVar, Union, cast
+from typing import TYPE_CHECKING, Any, TypeVar, Union, cast
 from uuid import UUID
 
 from attrs import define as _attrs_define
@@ -8,6 +8,10 @@ from attrs import field as _attrs_field
 from ..models.task_status import TaskStatus
 from ..models.user_task_type import UserTaskType
 from ..types import UNSET, Unset
+
+if TYPE_CHECKING:
+    from ..models.task_config import TaskConfig
+
 
 T = TypeVar("T", bound="Task")
 
@@ -20,7 +24,7 @@ class Task:
         created_at (str):
         updated_at (str):
         type_ (UserTaskType):
-        payload (str):
+        config (TaskConfig):
         user_id (UUID):
         status (Union[Unset, TaskStatus]):
         error_message (Union[None, Unset, str]):
@@ -30,7 +34,7 @@ class Task:
     created_at: str
     updated_at: str
     type_: UserTaskType
-    payload: str
+    config: "TaskConfig"
     user_id: UUID
     status: Union[Unset, TaskStatus] = UNSET
     error_message: Union[None, Unset, str] = UNSET
@@ -45,7 +49,7 @@ class Task:
 
         type_ = self.type_.value
 
-        payload = self.payload
+        config = self.config.to_dict()
 
         user_id = str(self.user_id)
 
@@ -67,7 +71,7 @@ class Task:
                 "created_at": created_at,
                 "updated_at": updated_at,
                 "type": type_,
-                "payload": payload,
+                "config": config,
                 "user_id": user_id,
             }
         )
@@ -80,6 +84,8 @@ class Task:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
+        from ..models.task_config import TaskConfig
+
         d = dict(src_dict)
         id = UUID(d.pop("id"))
 
@@ -89,7 +95,7 @@ class Task:
 
         type_ = UserTaskType(d.pop("type"))
 
-        payload = d.pop("payload")
+        config = TaskConfig.from_dict(d.pop("config"))
 
         user_id = UUID(d.pop("user_id"))
 
@@ -114,7 +120,7 @@ class Task:
             created_at=created_at,
             updated_at=updated_at,
             type_=type_,
-            payload=payload,
+            config=config,
             user_id=user_id,
             status=status,
             error_message=error_message,

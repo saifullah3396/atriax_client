@@ -40,6 +40,7 @@ from .pagination import Pagination
 from .pre_signed_url_response import PreSignedUrlResponse
 from .pre_signed_url_response_item import PreSignedUrlResponseItem
 from .task import Task
+from .task_config import TaskConfig
 from .task_status import TaskStatus
 from .task_type import TaskType
 from .task_update import TaskUpdate
@@ -88,6 +89,7 @@ __all__ = (
     "PreSignedUrlResponse",
     "PreSignedUrlResponseItem",
     "Task",
+    "TaskConfig",
     "TaskStatus",
     "TaskType",
     "TaskUpdate",
