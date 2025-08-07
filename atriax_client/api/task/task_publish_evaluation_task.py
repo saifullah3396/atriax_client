@@ -1,27 +1,24 @@
 from http import HTTPStatus
 from typing import Any, Optional, Union
-from uuid import UUID
 
 import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
+from ...models.evaluation_task_config import EvaluationTaskConfig
 from ...models.http_validation_error import HTTPValidationError
-from ...models.task import Task
-from ...models.task_update import TaskUpdate
 from ...types import Response
 
 
 def _get_kwargs(
-    id: UUID,
     *,
-    body: TaskUpdate,
+    body: EvaluationTaskConfig,
 ) -> dict[str, Any]:
     headers: dict[str, Any] = {}
 
     _kwargs: dict[str, Any] = {
-        "method": "put",
-        "url": f"/api/v1/tasks/{id}",
+        "method": "post",
+        "url": "/api/v1/task/evaluation/",
     }
 
     _kwargs["json"] = body.to_dict()
@@ -34,10 +31,9 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[Union[HTTPValidationError, Task]]:
+) -> Optional[Union[Any, HTTPValidationError]]:
     if response.status_code == 200:
-        response_200 = Task.from_dict(response.json())
-
+        response_200 = response.json()
         return response_200
     if response.status_code == 422:
         response_422 = HTTPValidationError.from_dict(response.json())
@@ -51,7 +47,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[Union[HTTPValidationError, Task]]:
+) -> Response[Union[Any, HTTPValidationError]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -61,27 +57,24 @@ def _build_response(
 
 
 def sync_detailed(
-    id: UUID,
     *,
     client: AuthenticatedClient,
-    body: TaskUpdate,
-) -> Response[Union[HTTPValidationError, Task]]:
-    """Update
+    body: EvaluationTaskConfig,
+) -> Response[Union[Any, HTTPValidationError]]:
+    """Publish Evaluation Task
 
     Args:
-        id (UUID):
-        body (TaskUpdate):
+        body (EvaluationTaskConfig):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[HTTPValidationError, Task]]
+        Response[Union[Any, HTTPValidationError]]
     """
 
     kwargs = _get_kwargs(
-        id=id,
         body=body,
     )
 
@@ -93,54 +86,48 @@ def sync_detailed(
 
 
 def sync(
-    id: UUID,
     *,
     client: AuthenticatedClient,
-    body: TaskUpdate,
-) -> Optional[Union[HTTPValidationError, Task]]:
-    """Update
+    body: EvaluationTaskConfig,
+) -> Optional[Union[Any, HTTPValidationError]]:
+    """Publish Evaluation Task
 
     Args:
-        id (UUID):
-        body (TaskUpdate):
+        body (EvaluationTaskConfig):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[HTTPValidationError, Task]
+        Union[Any, HTTPValidationError]
     """
 
     return sync_detailed(
-        id=id,
         client=client,
         body=body,
     ).parsed
 
 
 async def asyncio_detailed(
-    id: UUID,
     *,
     client: AuthenticatedClient,
-    body: TaskUpdate,
-) -> Response[Union[HTTPValidationError, Task]]:
-    """Update
+    body: EvaluationTaskConfig,
+) -> Response[Union[Any, HTTPValidationError]]:
+    """Publish Evaluation Task
 
     Args:
-        id (UUID):
-        body (TaskUpdate):
+        body (EvaluationTaskConfig):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[HTTPValidationError, Task]]
+        Response[Union[Any, HTTPValidationError]]
     """
 
     kwargs = _get_kwargs(
-        id=id,
         body=body,
     )
 
@@ -150,28 +137,25 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    id: UUID,
     *,
     client: AuthenticatedClient,
-    body: TaskUpdate,
-) -> Optional[Union[HTTPValidationError, Task]]:
-    """Update
+    body: EvaluationTaskConfig,
+) -> Optional[Union[Any, HTTPValidationError]]:
+    """Publish Evaluation Task
 
     Args:
-        id (UUID):
-        body (TaskUpdate):
+        body (EvaluationTaskConfig):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[HTTPValidationError, Task]
+        Union[Any, HTTPValidationError]
     """
 
     return (
         await asyncio_detailed(
-            id=id,
             client=client,
             body=body,
         )

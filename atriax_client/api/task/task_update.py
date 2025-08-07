@@ -8,17 +8,27 @@ from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.http_validation_error import HTTPValidationError
 from ...models.task import Task
+from ...models.task_update import TaskUpdate
 from ...types import Response
 
 
 def _get_kwargs(
     id: UUID,
+    *,
+    body: TaskUpdate,
 ) -> dict[str, Any]:
+    headers: dict[str, Any] = {}
+
     _kwargs: dict[str, Any] = {
-        "method": "get",
-        "url": f"/api/v1/tasks/{id}",
+        "method": "put",
+        "url": f"/api/v1/task/{id}",
     }
 
+    _kwargs["json"] = body.to_dict()
+
+    headers["Content-Type"] = "application/json"
+
+    _kwargs["headers"] = headers
     return _kwargs
 
 
@@ -54,11 +64,13 @@ def sync_detailed(
     id: UUID,
     *,
     client: AuthenticatedClient,
+    body: TaskUpdate,
 ) -> Response[Union[HTTPValidationError, Task]]:
-    """Item
+    """Update
 
     Args:
         id (UUID):
+        body (TaskUpdate):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -70,6 +82,7 @@ def sync_detailed(
 
     kwargs = _get_kwargs(
         id=id,
+        body=body,
     )
 
     response = client.get_httpx_client().request(
@@ -83,11 +96,13 @@ def sync(
     id: UUID,
     *,
     client: AuthenticatedClient,
+    body: TaskUpdate,
 ) -> Optional[Union[HTTPValidationError, Task]]:
-    """Item
+    """Update
 
     Args:
         id (UUID):
+        body (TaskUpdate):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -100,6 +115,7 @@ def sync(
     return sync_detailed(
         id=id,
         client=client,
+        body=body,
     ).parsed
 
 
@@ -107,11 +123,13 @@ async def asyncio_detailed(
     id: UUID,
     *,
     client: AuthenticatedClient,
+    body: TaskUpdate,
 ) -> Response[Union[HTTPValidationError, Task]]:
-    """Item
+    """Update
 
     Args:
         id (UUID):
+        body (TaskUpdate):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -123,6 +141,7 @@ async def asyncio_detailed(
 
     kwargs = _get_kwargs(
         id=id,
+        body=body,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -134,11 +153,13 @@ async def asyncio(
     id: UUID,
     *,
     client: AuthenticatedClient,
+    body: TaskUpdate,
 ) -> Optional[Union[HTTPValidationError, Task]]:
-    """Item
+    """Update
 
     Args:
         id (UUID):
+        body (TaskUpdate):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -152,5 +173,6 @@ async def asyncio(
         await asyncio_detailed(
             id=id,
             client=client,
+            body=body,
         )
     ).parsed
