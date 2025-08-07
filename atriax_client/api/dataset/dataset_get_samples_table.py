@@ -6,6 +6,7 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
+from ...models.dataset_samples_page import DatasetSamplesPage
 from ...models.http_validation_error import HTTPValidationError
 from ...types import UNSET, Response, Unset
 
@@ -13,12 +14,13 @@ from ...types import UNSET, Response, Unset
 def _get_kwargs(
     id: UUID,
     branch: str,
+    config: str,
     split: str,
     *,
     page: Union[Unset, int] = 0,
     page_size: Union[Unset, int] = 1,
     paginated: Union[Unset, bool] = True,
-    order_by: Union[Unset, str] = "sample_id",
+    order_by: Union[Unset, str] = "index",
     order: Union[Unset, str] = "asc",
     search: Union[None, Unset, str] = UNSET,
     search_by: Union[None, Unset, str] = UNSET,
@@ -53,7 +55,7 @@ def _get_kwargs(
 
     _kwargs: dict[str, Any] = {
         "method": "get",
-        "url": f"/api/v1/dataset/{id}/table/{branch}/{split}",
+        "url": f"/api/v1/dataset/{id}/table/{branch}/{config}/{split}",
         "params": params,
     }
 
@@ -62,9 +64,10 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[Union[Any, HTTPValidationError]]:
+) -> Optional[Union[DatasetSamplesPage, HTTPValidationError]]:
     if response.status_code == 200:
-        response_200 = response.json()
+        response_200 = DatasetSamplesPage.from_dict(response.json())
+
         return response_200
     if response.status_code == 422:
         response_422 = HTTPValidationError.from_dict(response.json())
@@ -78,7 +81,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[Union[Any, HTTPValidationError]]:
+) -> Response[Union[DatasetSamplesPage, HTTPValidationError]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -90,27 +93,29 @@ def _build_response(
 def sync_detailed(
     id: UUID,
     branch: str,
+    config: str,
     split: str,
     *,
     client: AuthenticatedClient,
     page: Union[Unset, int] = 0,
     page_size: Union[Unset, int] = 1,
     paginated: Union[Unset, bool] = True,
-    order_by: Union[Unset, str] = "sample_id",
+    order_by: Union[Unset, str] = "index",
     order: Union[Unset, str] = "asc",
     search: Union[None, Unset, str] = UNSET,
     search_by: Union[None, Unset, str] = UNSET,
-) -> Response[Union[Any, HTTPValidationError]]:
-    """Get Table
+) -> Response[Union[DatasetSamplesPage, HTTPValidationError]]:
+    """Get Samples Table
 
     Args:
         id (UUID):
         branch (str):
+        config (str):
         split (str):
         page (Union[Unset, int]):  Default: 0.
         page_size (Union[Unset, int]):  Default: 1.
         paginated (Union[Unset, bool]):  Default: True.
-        order_by (Union[Unset, str]):  Default: 'sample_id'.
+        order_by (Union[Unset, str]):  Default: 'index'.
         order (Union[Unset, str]):  Default: 'asc'.
         search (Union[None, Unset, str]):
         search_by (Union[None, Unset, str]):
@@ -120,12 +125,13 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, HTTPValidationError]]
+        Response[Union[DatasetSamplesPage, HTTPValidationError]]
     """
 
     kwargs = _get_kwargs(
         id=id,
         branch=branch,
+        config=config,
         split=split,
         page=page,
         page_size=page_size,
@@ -146,27 +152,29 @@ def sync_detailed(
 def sync(
     id: UUID,
     branch: str,
+    config: str,
     split: str,
     *,
     client: AuthenticatedClient,
     page: Union[Unset, int] = 0,
     page_size: Union[Unset, int] = 1,
     paginated: Union[Unset, bool] = True,
-    order_by: Union[Unset, str] = "sample_id",
+    order_by: Union[Unset, str] = "index",
     order: Union[Unset, str] = "asc",
     search: Union[None, Unset, str] = UNSET,
     search_by: Union[None, Unset, str] = UNSET,
-) -> Optional[Union[Any, HTTPValidationError]]:
-    """Get Table
+) -> Optional[Union[DatasetSamplesPage, HTTPValidationError]]:
+    """Get Samples Table
 
     Args:
         id (UUID):
         branch (str):
+        config (str):
         split (str):
         page (Union[Unset, int]):  Default: 0.
         page_size (Union[Unset, int]):  Default: 1.
         paginated (Union[Unset, bool]):  Default: True.
-        order_by (Union[Unset, str]):  Default: 'sample_id'.
+        order_by (Union[Unset, str]):  Default: 'index'.
         order (Union[Unset, str]):  Default: 'asc'.
         search (Union[None, Unset, str]):
         search_by (Union[None, Unset, str]):
@@ -176,12 +184,13 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Any, HTTPValidationError]
+        Union[DatasetSamplesPage, HTTPValidationError]
     """
 
     return sync_detailed(
         id=id,
         branch=branch,
+        config=config,
         split=split,
         client=client,
         page=page,
@@ -197,27 +206,29 @@ def sync(
 async def asyncio_detailed(
     id: UUID,
     branch: str,
+    config: str,
     split: str,
     *,
     client: AuthenticatedClient,
     page: Union[Unset, int] = 0,
     page_size: Union[Unset, int] = 1,
     paginated: Union[Unset, bool] = True,
-    order_by: Union[Unset, str] = "sample_id",
+    order_by: Union[Unset, str] = "index",
     order: Union[Unset, str] = "asc",
     search: Union[None, Unset, str] = UNSET,
     search_by: Union[None, Unset, str] = UNSET,
-) -> Response[Union[Any, HTTPValidationError]]:
-    """Get Table
+) -> Response[Union[DatasetSamplesPage, HTTPValidationError]]:
+    """Get Samples Table
 
     Args:
         id (UUID):
         branch (str):
+        config (str):
         split (str):
         page (Union[Unset, int]):  Default: 0.
         page_size (Union[Unset, int]):  Default: 1.
         paginated (Union[Unset, bool]):  Default: True.
-        order_by (Union[Unset, str]):  Default: 'sample_id'.
+        order_by (Union[Unset, str]):  Default: 'index'.
         order (Union[Unset, str]):  Default: 'asc'.
         search (Union[None, Unset, str]):
         search_by (Union[None, Unset, str]):
@@ -227,12 +238,13 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, HTTPValidationError]]
+        Response[Union[DatasetSamplesPage, HTTPValidationError]]
     """
 
     kwargs = _get_kwargs(
         id=id,
         branch=branch,
+        config=config,
         split=split,
         page=page,
         page_size=page_size,
@@ -251,27 +263,29 @@ async def asyncio_detailed(
 async def asyncio(
     id: UUID,
     branch: str,
+    config: str,
     split: str,
     *,
     client: AuthenticatedClient,
     page: Union[Unset, int] = 0,
     page_size: Union[Unset, int] = 1,
     paginated: Union[Unset, bool] = True,
-    order_by: Union[Unset, str] = "sample_id",
+    order_by: Union[Unset, str] = "index",
     order: Union[Unset, str] = "asc",
     search: Union[None, Unset, str] = UNSET,
     search_by: Union[None, Unset, str] = UNSET,
-) -> Optional[Union[Any, HTTPValidationError]]:
-    """Get Table
+) -> Optional[Union[DatasetSamplesPage, HTTPValidationError]]:
+    """Get Samples Table
 
     Args:
         id (UUID):
         branch (str):
+        config (str):
         split (str):
         page (Union[Unset, int]):  Default: 0.
         page_size (Union[Unset, int]):  Default: 1.
         paginated (Union[Unset, bool]):  Default: True.
-        order_by (Union[Unset, str]):  Default: 'sample_id'.
+        order_by (Union[Unset, str]):  Default: 'index'.
         order (Union[Unset, str]):  Default: 'asc'.
         search (Union[None, Unset, str]):
         search_by (Union[None, Unset, str]):
@@ -281,13 +295,14 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Any, HTTPValidationError]
+        Union[DatasetSamplesPage, HTTPValidationError]
     """
 
     return (
         await asyncio_detailed(
             id=id,
             branch=branch,
+            config=config,
             split=split,
             client=client,
             page=page,

@@ -6,8 +6,7 @@ import httpx
 from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.http_validation_error import HTTPValidationError
-from ...models.model_list_item import ModelListItem
-from ...models.task_type import TaskType
+from ...models.task import Task
 from ...types import UNSET, Response, Unset
 
 
@@ -21,7 +20,6 @@ def _get_kwargs(
     order: Union[Unset, str] = "desc",
     search: Union[None, Unset, str] = UNSET,
     search_by: Union[None, Unset, str] = UNSET,
-    task_type: Union[None, TaskType, Unset] = UNSET,
 ) -> dict[str, Any]:
     params: dict[str, Any] = {}
 
@@ -56,20 +54,11 @@ def _get_kwargs(
         json_search_by = search_by
     params["search_by"] = json_search_by
 
-    json_task_type: Union[None, Unset, str]
-    if isinstance(task_type, Unset):
-        json_task_type = UNSET
-    elif isinstance(task_type, TaskType):
-        json_task_type = task_type.value
-    else:
-        json_task_type = task_type
-    params["task_type"] = json_task_type
-
     params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
 
     _kwargs: dict[str, Any] = {
         "method": "get",
-        "url": "/api/v1/model/",
+        "url": "/api/v1/tasks/",
         "params": params,
     }
 
@@ -78,12 +67,12 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[Union[HTTPValidationError, list["ModelListItem"]]]:
+) -> Optional[Union[HTTPValidationError, list["Task"]]]:
     if response.status_code == 200:
         response_200 = []
         _response_200 = response.json()
         for response_200_item_data in _response_200:
-            response_200_item = ModelListItem.from_dict(response_200_item_data)
+            response_200_item = Task.from_dict(response_200_item_data)
 
             response_200.append(response_200_item)
 
@@ -100,7 +89,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[Union[HTTPValidationError, list["ModelListItem"]]]:
+) -> Response[Union[HTTPValidationError, list["Task"]]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -120,8 +109,7 @@ def sync_detailed(
     order: Union[Unset, str] = "desc",
     search: Union[None, Unset, str] = UNSET,
     search_by: Union[None, Unset, str] = UNSET,
-    task_type: Union[None, TaskType, Unset] = UNSET,
-) -> Response[Union[HTTPValidationError, list["ModelListItem"]]]:
+) -> Response[Union[HTTPValidationError, list["Task"]]]:
     """List
 
     Args:
@@ -133,14 +121,13 @@ def sync_detailed(
         order (Union[Unset, str]):  Default: 'desc'.
         search (Union[None, Unset, str]):
         search_by (Union[None, Unset, str]):
-        task_type (Union[None, TaskType, Unset]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[HTTPValidationError, list['ModelListItem']]]
+        Response[Union[HTTPValidationError, list['Task']]]
     """
 
     kwargs = _get_kwargs(
@@ -152,7 +139,6 @@ def sync_detailed(
         order=order,
         search=search,
         search_by=search_by,
-        task_type=task_type,
     )
 
     response = client.get_httpx_client().request(
@@ -173,8 +159,7 @@ def sync(
     order: Union[Unset, str] = "desc",
     search: Union[None, Unset, str] = UNSET,
     search_by: Union[None, Unset, str] = UNSET,
-    task_type: Union[None, TaskType, Unset] = UNSET,
-) -> Optional[Union[HTTPValidationError, list["ModelListItem"]]]:
+) -> Optional[Union[HTTPValidationError, list["Task"]]]:
     """List
 
     Args:
@@ -186,14 +171,13 @@ def sync(
         order (Union[Unset, str]):  Default: 'desc'.
         search (Union[None, Unset, str]):
         search_by (Union[None, Unset, str]):
-        task_type (Union[None, TaskType, Unset]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[HTTPValidationError, list['ModelListItem']]
+        Union[HTTPValidationError, list['Task']]
     """
 
     return sync_detailed(
@@ -206,7 +190,6 @@ def sync(
         order=order,
         search=search,
         search_by=search_by,
-        task_type=task_type,
     ).parsed
 
 
@@ -221,8 +204,7 @@ async def asyncio_detailed(
     order: Union[Unset, str] = "desc",
     search: Union[None, Unset, str] = UNSET,
     search_by: Union[None, Unset, str] = UNSET,
-    task_type: Union[None, TaskType, Unset] = UNSET,
-) -> Response[Union[HTTPValidationError, list["ModelListItem"]]]:
+) -> Response[Union[HTTPValidationError, list["Task"]]]:
     """List
 
     Args:
@@ -234,14 +216,13 @@ async def asyncio_detailed(
         order (Union[Unset, str]):  Default: 'desc'.
         search (Union[None, Unset, str]):
         search_by (Union[None, Unset, str]):
-        task_type (Union[None, TaskType, Unset]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[HTTPValidationError, list['ModelListItem']]]
+        Response[Union[HTTPValidationError, list['Task']]]
     """
 
     kwargs = _get_kwargs(
@@ -253,7 +234,6 @@ async def asyncio_detailed(
         order=order,
         search=search,
         search_by=search_by,
-        task_type=task_type,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -272,8 +252,7 @@ async def asyncio(
     order: Union[Unset, str] = "desc",
     search: Union[None, Unset, str] = UNSET,
     search_by: Union[None, Unset, str] = UNSET,
-    task_type: Union[None, TaskType, Unset] = UNSET,
-) -> Optional[Union[HTTPValidationError, list["ModelListItem"]]]:
+) -> Optional[Union[HTTPValidationError, list["Task"]]]:
     """List
 
     Args:
@@ -285,14 +264,13 @@ async def asyncio(
         order (Union[Unset, str]):  Default: 'desc'.
         search (Union[None, Unset, str]):
         search_by (Union[None, Unset, str]):
-        task_type (Union[None, TaskType, Unset]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[HTTPValidationError, list['ModelListItem']]
+        Union[HTTPValidationError, list['Task']]
     """
 
     return (
@@ -306,6 +284,5 @@ async def asyncio(
             order=order,
             search=search,
             search_by=search_by,
-            task_type=task_type,
         )
     ).parsed

@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class UserTaskStatus(str, Enum):
+class TaskStatus(str, Enum):
     FAILED = "failed"
     IN_PROGRESS = "in_progress"
     PENDING = "pending"

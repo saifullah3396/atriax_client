@@ -17,7 +17,7 @@ class BodyModelCreate:
     """
     Attributes:
         name (str):
-        task_type (TaskType):
+        task_type (Union[Unset, TaskType]):
         model_file (Union[Unset, File]):
         default_branch (Union[Unset, str]):  Default: 'main'.
         description (Union[Unset, str]):
@@ -25,7 +25,7 @@ class BodyModelCreate:
     """
 
     name: str
-    task_type: TaskType
+    task_type: Union[Unset, TaskType] = UNSET
     model_file: Union[Unset, File] = UNSET
     default_branch: Union[Unset, str] = "main"
     description: Union[Unset, str] = UNSET
@@ -35,7 +35,9 @@ class BodyModelCreate:
     def to_dict(self) -> dict[str, Any]:
         name = self.name
 
-        task_type = self.task_type.value
+        task_type: Union[Unset, str] = UNSET
+        if not isinstance(self.task_type, Unset):
+            task_type = self.task_type.value
 
         model_file: Union[Unset, FileTypes] = UNSET
         if not isinstance(self.model_file, Unset):
@@ -52,9 +54,10 @@ class BodyModelCreate:
         field_dict.update(
             {
                 "name": name,
-                "task_type": task_type,
             }
         )
+        if task_type is not UNSET:
+            field_dict["task_type"] = task_type
         if model_file is not UNSET:
             field_dict["model_file"] = model_file
         if default_branch is not UNSET:
@@ -71,7 +74,8 @@ class BodyModelCreate:
 
         files.append(("name", (None, str(self.name).encode(), "text/plain")))
 
-        files.append(("task_type", (None, str(self.task_type.value).encode(), "text/plain")))
+        if not isinstance(self.task_type, Unset):
+            files.append(("task_type", (None, str(self.task_type.value).encode(), "text/plain")))
 
         if not isinstance(self.model_file, Unset):
             files.append(("model_file", self.model_file.to_tuple()))
@@ -95,7 +99,12 @@ class BodyModelCreate:
         d = dict(src_dict)
         name = d.pop("name")
 
-        task_type = TaskType(d.pop("task_type"))
+        _task_type = d.pop("task_type", UNSET)
+        task_type: Union[Unset, TaskType]
+        if isinstance(_task_type, Unset):
+            task_type = UNSET
+        else:
+            task_type = TaskType(_task_type)
 
         _model_file = d.pop("model_file", UNSET)
         model_file: Union[Unset, File]

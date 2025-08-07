@@ -9,7 +9,7 @@ from ..models.task_type import TaskType
 from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
-    from ..models.lake_fs_metadata_object import LakeFSMetadataObject
+    from ..models.model_storage_metadata import ModelStorageMetadata
 
 
 T = TypeVar("T", bound="ModelListItem")
@@ -26,7 +26,7 @@ class ModelListItem:
         description (str):
         type_ (str):
         user_id (UUID):
-        storage_metadata (LakeFSMetadataObject):
+        storage_metadata (ModelStorageMetadata):
         task_type (TaskType):
         default_branch (Union[Unset, str]):  Default: 'main'.
         is_public (Union[Unset, bool]):  Default: False.
@@ -39,7 +39,7 @@ class ModelListItem:
     description: str
     type_: str
     user_id: UUID
-    storage_metadata: "LakeFSMetadataObject"
+    storage_metadata: "ModelStorageMetadata"
     task_type: TaskType
     default_branch: Union[Unset, str] = "main"
     is_public: Union[Unset, bool] = False
@@ -92,7 +92,7 @@ class ModelListItem:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
-        from ..models.lake_fs_metadata_object import LakeFSMetadataObject
+        from ..models.model_storage_metadata import ModelStorageMetadata
 
         d = dict(src_dict)
         id = UUID(d.pop("id"))
@@ -109,7 +109,7 @@ class ModelListItem:
 
         user_id = UUID(d.pop("user_id"))
 
-        storage_metadata = LakeFSMetadataObject.from_dict(d.pop("storage_metadata"))
+        storage_metadata = ModelStorageMetadata.from_dict(d.pop("storage_metadata"))
 
         task_type = TaskType(d.pop("task_type"))
 

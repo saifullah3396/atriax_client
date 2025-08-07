@@ -5,15 +5,15 @@ from uuid import UUID
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-from ..models.user_task_status import UserTaskStatus
+from ..models.task_status import TaskStatus
 from ..models.user_task_type import UserTaskType
 from ..types import UNSET, Unset
 
-T = TypeVar("T", bound="UserTask")
+T = TypeVar("T", bound="Task")
 
 
 @_attrs_define
-class UserTask:
+class Task:
     """
     Attributes:
         id (UUID):
@@ -22,9 +22,8 @@ class UserTask:
         type_ (UserTaskType):
         payload (str):
         user_id (UUID):
-        status (Union[Unset, UserTaskStatus]):
+        status (Union[Unset, TaskStatus]):
         error_message (Union[None, Unset, str]):
-        dataset_id (Union[None, UUID, Unset]):
     """
 
     id: UUID
@@ -33,9 +32,8 @@ class UserTask:
     type_: UserTaskType
     payload: str
     user_id: UUID
-    status: Union[Unset, UserTaskStatus] = UNSET
+    status: Union[Unset, TaskStatus] = UNSET
     error_message: Union[None, Unset, str] = UNSET
-    dataset_id: Union[None, UUID, Unset] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -61,14 +59,6 @@ class UserTask:
         else:
             error_message = self.error_message
 
-        dataset_id: Union[None, Unset, str]
-        if isinstance(self.dataset_id, Unset):
-            dataset_id = UNSET
-        elif isinstance(self.dataset_id, UUID):
-            dataset_id = str(self.dataset_id)
-        else:
-            dataset_id = self.dataset_id
-
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update(
@@ -85,8 +75,6 @@ class UserTask:
             field_dict["status"] = status
         if error_message is not UNSET:
             field_dict["error_message"] = error_message
-        if dataset_id is not UNSET:
-            field_dict["dataset_id"] = dataset_id
 
         return field_dict
 
@@ -106,11 +94,11 @@ class UserTask:
         user_id = UUID(d.pop("user_id"))
 
         _status = d.pop("status", UNSET)
-        status: Union[Unset, UserTaskStatus]
+        status: Union[Unset, TaskStatus]
         if isinstance(_status, Unset):
             status = UNSET
         else:
-            status = UserTaskStatus(_status)
+            status = TaskStatus(_status)
 
         def _parse_error_message(data: object) -> Union[None, Unset, str]:
             if data is None:
@@ -121,24 +109,7 @@ class UserTask:
 
         error_message = _parse_error_message(d.pop("error_message", UNSET))
 
-        def _parse_dataset_id(data: object) -> Union[None, UUID, Unset]:
-            if data is None:
-                return data
-            if isinstance(data, Unset):
-                return data
-            try:
-                if not isinstance(data, str):
-                    raise TypeError()
-                dataset_id_type_0 = UUID(data)
-
-                return dataset_id_type_0
-            except:  # noqa: E722
-                pass
-            return cast(Union[None, UUID, Unset], data)
-
-        dataset_id = _parse_dataset_id(d.pop("dataset_id", UNSET))
-
-        user_task = cls(
+        task = cls(
             id=id,
             created_at=created_at,
             updated_at=updated_at,
@@ -147,11 +118,10 @@ class UserTask:
             user_id=user_id,
             status=status,
             error_message=error_message,
-            dataset_id=dataset_id,
         )
 
-        user_task.additional_properties = d
-        return user_task
+        task.additional_properties = d
+        return task
 
     @property
     def additional_keys(self) -> list[str]:

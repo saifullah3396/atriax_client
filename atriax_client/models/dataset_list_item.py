@@ -10,7 +10,7 @@ from ..models.dataset_status import DatasetStatus
 from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
-    from ..models.lake_fs_metadata_object import LakeFSMetadataObject
+    from ..models.dataset_storage_metadata import DatasetStorageMetadata
 
 
 T = TypeVar("T", bound="DatasetListItem")
@@ -27,7 +27,7 @@ class DatasetListItem:
         description (str):
         type_ (str):
         user_id (UUID):
-        storage_metadata (LakeFSMetadataObject):
+        storage_metadata (DatasetStorageMetadata):
         data_instance_type (DataInstanceType):
         default_branch (Union[Unset, str]):  Default: 'main'.
         is_public (Union[Unset, bool]):  Default: False.
@@ -41,7 +41,7 @@ class DatasetListItem:
     description: str
     type_: str
     user_id: UUID
-    storage_metadata: "LakeFSMetadataObject"
+    storage_metadata: "DatasetStorageMetadata"
     data_instance_type: DataInstanceType
     default_branch: Union[Unset, str] = "main"
     is_public: Union[Unset, bool] = False
@@ -101,7 +101,7 @@ class DatasetListItem:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
-        from ..models.lake_fs_metadata_object import LakeFSMetadataObject
+        from ..models.dataset_storage_metadata import DatasetStorageMetadata
 
         d = dict(src_dict)
         id = UUID(d.pop("id"))
@@ -118,7 +118,7 @@ class DatasetListItem:
 
         user_id = UUID(d.pop("user_id"))
 
-        storage_metadata = LakeFSMetadataObject.from_dict(d.pop("storage_metadata"))
+        storage_metadata = DatasetStorageMetadata.from_dict(d.pop("storage_metadata"))
 
         data_instance_type = DataInstanceType(d.pop("data_instance_type"))
 
